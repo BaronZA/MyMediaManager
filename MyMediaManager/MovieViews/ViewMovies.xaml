@@ -1,0 +1,78 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyMediaManager.MovieViews"
+        xmlns:MyMediaDataLayer="clr-namespace:MyMediaDataLayer;assembly=MyMediaDataLayer" x:Class="MyMediaManager.MovieViews.ViewMovies"
+        mc:Ignorable="d"
+        Title="ViewMovies" Height="900" Width="1600" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="movieViewSource" d:DesignSource="{d:DesignInstance {x:Type MyMediaDataLayer:Movie}, CreateList=True}"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource movieViewSource}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="19*"/>
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="movieDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" Margin="0,120,479,125" ItemsSource="{Binding}" EnableRowVirtualization="True" AutoGenerateColumns="False" Grid.ColumnSpan="2" MouseRightButtonUp="ContextMenuRightClick" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="nameColumn" Width="SizeToCells" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="storageLocationColumn" Width="SizeToCells" Header="Storage Location" Binding="{Binding StorageLocation}" IsReadOnly="True"/>
+                <DataGridTemplateColumn x:Name="releaseDateColumn" Width="SizeToCells" Header="Release Date" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding ReleaseDate, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="genreColumn" Width="SizeToCells" Header="Genre" Binding="{Binding Genre}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="runTimeMinutesColumn" Width="SizeToHeader" Header="Run Time Minutes" Binding="{Binding RunTimeMinutes}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="budgetColumn" Width="SizeToCells" Header="Budget" Binding="{Binding Budget}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="revenueColumn" Width="SizeToCells" Header="Revenue" Binding="{Binding Revenue}" IsReadOnly="True"/>
+                <!--<DataGridTextColumn x:Name="homePageColumn" Width="SizeToCells" Header="Home Page" Binding="{Binding HomePage}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="overviewColumn" Width="SizeToHeader" Header="Overview" Binding="{Binding Overview}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="castDetailsColumn" Width="SizeToHeader" Header="Cast Details" Binding="{Binding CastDetails}" IsReadOnly="True"/>-->
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu >
+                    <MenuItem x:Name="OpenDirectoryMenuItem" Header="Open Directory" Click="OpenDirectory_Click" />
+                    <MenuItem x:Name="EditMenuItem" Header="Edit" Click="Edit_Click"  />
+                    <MenuItem x:Name="DeleteMenuItem" Header="Delete" Click="Delete_Click"  />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <Grid x:Name="detailsGrid" Grid.Column="1" HorizontalAlignment="Left" Margin="786,120,0,0" VerticalAlignment="Top" Width="474">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Home Page:" Grid.Column="0" HorizontalAlignment="Left" Margin="2,3,0,3" Grid.Row="0" VerticalAlignment="Center"/>
+            <TextBlock x:Name="homePageTextBlock" Grid.Row="0" Grid.Column="1" Margin="4,4,0,4" VerticalAlignment="Center">
+                <Hyperlink x:Name="homePageHyperlink" NavigateUri="{Binding HomePage}" RequestNavigate="HomePageHyperlink_RequestNavigate">
+                    <TextBlock Text="{Binding HomePage}" VerticalAlignment="Center"/>
+                </Hyperlink>
+            </TextBlock>
+            <!--<TextBox x:Name="homePageTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="4,4,0,4" Grid.Row="0" Text="{Binding HomePage, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="380" Grid.ColumnSpan="4"/>-->
+            <Label Content="Overview:" Grid.Column="0" HorizontalAlignment="Left" Margin="2,3,0,3" Grid.Row="1" VerticalAlignment="Center"/>
+            <TextBox x:Name="overviewTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="4,7,0,7" Grid.Row="1" Text="{Binding Overview, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="380" TextWrapping="Wrap"/>
+            <Label Content="Cast Details:" Grid.Column="0" HorizontalAlignment="Left" Margin="2,3,0,3" Grid.Row="2" VerticalAlignment="Center"/>
+            <TextBox x:Name="castDetailsTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="4,7,0,7" Grid.Row="2" Text="{Binding CastDetails, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="380" TextWrapping="Wrap"/>
+        </Grid>
+        <Label Content="Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Grid.Column="1" Margin="329,21,0,0"/>
+        <Label Content="Storage Location:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="329,47,0,0" Grid.Column="1"/>
+        <Label Content="Genre:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="329,73,0,0" Grid.Column="1"/>
+        <TextBox x:Name="nameFilterTexBox" HorizontalAlignment="Left" Height="23" Margin="434,24,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Grid.Column="1"/>
+        <TextBox x:Name="storageLocationFilterTexBox" HorizontalAlignment="Left" Height="23" Margin="434,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Grid.Column="1"/>
+        <TextBox x:Name="genreFilterTexBox" HorizontalAlignment="Left" Height="23" Margin="434,73,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Grid.Column="1"/>
+        <Button x:Name="filterButton" Content="Filter" Grid.Column="1" HorizontalAlignment="Left" Margin="677,21,0,0" VerticalAlignment="Top" Width="90" Height="75" Click="FilterButton_Click"/>
+        <Button x:Name="addButton" Content="Add New Movie" HorizontalAlignment="Left" VerticalAlignment="Top" Width="332" Height="67" Click="AddMovieButton_Click"/>
+
+    </Grid>
+</Window>

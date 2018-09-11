@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MyMediaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="StorageLocation" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ReleaseDate" Type="datetime" />
+          <Property Name="Genre" Type="varchar" MaxLength="30" />
+          <Property Name="RunTimeMinutes" Type="int" />
+          <Property Name="Budget" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Revenue" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="HomePage" Type="varchar" MaxLength="255" />
+          <Property Name="Overview" Type="varchar(max)" />
+          <Property Name="CastDetails" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Series">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SeriesSeason">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SeriesID" Type="int" Nullable="false" />
+          <Property Name="SeasonNumber" Type="int" Nullable="false" />
+          <Property Name="StorageLocation" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__SeriesSea__Serie__01142BA1">
+          <End Role="Series" Type="Self.Series" Multiplicity="1" />
+          <End Role="SeriesSeason" Type="Self.SeriesSeason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Series">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SeriesSeason">
+              <PropertyRef Name="SeriesID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MyMediaDBModelStoreContainer">
+          <EntitySet Name="Movie" EntityType="Self.Movie" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Series" EntityType="Self.Series" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SeriesSeason" EntityType="Self.SeriesSeason" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__SeriesSea__Serie__01142BA1" Association="Self.FK__SeriesSea__Serie__01142BA1">
+            <End Role="Series" EntitySet="Series" />
+            <End Role="SeriesSeason" EntitySet="SeriesSeason" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyMediaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StorageLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ReleaseDate" Type="DateTime" Precision="3" />
+          <Property Name="Genre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="RunTimeMinutes" Type="Int32" />
+          <Property Name="Budget" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Revenue" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="HomePage" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CastDetails" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Series">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="SeriesSeasons" Relationship="Self.FK__SeriesSea__Serie__01142BA1" FromRole="Series" ToRole="SeriesSeason" />
+        </EntityType>
+        <EntityType Name="SeriesSeason">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SeriesID" Type="Int32" Nullable="false" />
+          <Property Name="SeasonNumber" Type="Int32" Nullable="false" />
+          <Property Name="StorageLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Series" Relationship="Self.FK__SeriesSea__Serie__01142BA1" FromRole="SeriesSeason" ToRole="Series" />
+        </EntityType>
+        <Association Name="FK__SeriesSea__Serie__01142BA1">
+          <End Role="Series" Type="Self.Series" Multiplicity="1" />
+          <End Role="SeriesSeason" Type="Self.SeriesSeason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Series">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SeriesSeason">
+              <PropertyRef Name="SeriesID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MyMediaDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Movies" EntityType="Self.Movie" />
+          <EntitySet Name="Series" EntityType="Self.Series" />
+          <EntitySet Name="SeriesSeasons" EntityType="Self.SeriesSeason" />
+          <AssociationSet Name="FK__SeriesSea__Serie__01142BA1" Association="Self.FK__SeriesSea__Serie__01142BA1">
+            <End Role="Series" EntitySet="Series" />
+            <End Role="SeriesSeason" EntitySet="SeriesSeasons" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyMediaDBModelStoreContainer" CdmEntityContainer="MyMediaDBEntities">
+          <EntitySetMapping Name="Movies">
+            <EntityTypeMapping TypeName="MyMediaDBModel.Movie">
+              <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StorageLocation" ColumnName="StorageLocation" />
+                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
+                <ScalarProperty Name="Genre" ColumnName="Genre" />
+                <ScalarProperty Name="RunTimeMinutes" ColumnName="RunTimeMinutes" />
+                <ScalarProperty Name="Budget" ColumnName="Budget" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="HomePage" ColumnName="HomePage" />
+                <ScalarProperty Name="Overview" ColumnName="Overview" />
+                <ScalarProperty Name="CastDetails" ColumnName="CastDetails" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Series">
+            <EntityTypeMapping TypeName="MyMediaDBModel.Series">
+              <MappingFragment StoreEntitySet="Series">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SeriesSeasons">
+            <EntityTypeMapping TypeName="MyMediaDBModel.SeriesSeason">
+              <MappingFragment StoreEntitySet="SeriesSeason">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SeriesID" ColumnName="SeriesID" />
+                <ScalarProperty Name="SeasonNumber" ColumnName="SeasonNumber" />
+                <ScalarProperty Name="StorageLocation" ColumnName="StorageLocation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
